@@ -7,6 +7,7 @@ package Test::System::Output::Factory;
 
 use strict;
 use warnings;
+use Class::Factory;
 use base qw(Class::Factory);
 
 sub new {
