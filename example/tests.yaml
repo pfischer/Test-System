@@ -1,0 +1,4 @@
+ping:
+    description: Test the ping and do foo and make bar
+    code: tests/ping.pl
+    
