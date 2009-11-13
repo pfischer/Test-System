@@ -1,0 +1,23 @@
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 02:12:45 2009 -0800
+
+    ./Makefile.PL result
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 02:07:02 2009 -0800
+
+    Let Test::System read a test plan from a YAML file and execute from
+    there.
+    
+    Also drop some attributes from Test::System since they are not really
+    needed or some are not that *required*
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 9 14:05:18 2009 -0800
+
+    Make it more CPAN standard
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 9 09:53:02 2009 -0800
+
+    Initial revision
