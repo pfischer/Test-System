@@ -7,7 +7,7 @@ package Test::System;
 
 =head1 NAME
 
-Test::System - Test suite oriented for testing a *system*
+Test::System - Test suite oriented for testing system administration tasks
 
 =head1 SYNOPSIS
 
@@ -22,20 +22,11 @@ Test::System - Test suite oriented for testing a *system*
 
 =head1 DESCRIPTION
 
-Loads and runs the available tests cases located in the namespace of
-Seco::Insanity::Tests. User can specify if only one or a group of tests cases
-should be run.
+Loads and runs a set of tests for verifying a system administration task
+before a possible incident or after a task that has been done.
 
-=head1 AUTHOR
- 
-Pablo Fischer (pablo@pablo.com.mx).
-
-=head1 COPYRIGHT
- 
-Copyright (C) 2009 by Pablo Fischer
- 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+Tests can be run as perl scripts and actually in any format I<TAP::Harness>
+supports.
 
 =cut
 use 5.006;
@@ -48,12 +39,12 @@ use TAP::Harness;
 use UNIVERSAL qw(isa);
 use Data::Dumper;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 Attributes
 
-Test::System exports a number of attributes that some only have read only
-access and others allow write access.
+The module offers a list of attributes that some only have read only access
+and others allow write access.
 
 =over 6
 
@@ -83,7 +74,7 @@ has 'test_groups' => (
 =item B<available_tests>
 
 Is a read only attribute that contains a list of all available tests found in
-the YAML file provided by tests_yaml.
+the YAML file provided by C<test_groups>.
 
 =cut
 has 'available_tests' => (
@@ -97,6 +88,10 @@ Is an attribute that can be represented as a string (like a hostname) or as a
 list (where each item will be a node/hostname). This attribute has write access
 and is where the tests are going to be executed to.
 
+Another way of setting this value is when C<runtests()> is called a test plan
+(in the form of a YAML file) can be provided and it can contain the list of
+nodes to use.
+
 =cut
 has 'nodes' => (
         is => 'rw',
@@ -107,7 +102,8 @@ has 'nodes' => (
 =item B<format>
 
 A write access string that has the format of how the tests should be presented,
-please refer to the modules available under Test::System::Output
+please refer to the modules available under L<Test::System::Output> or in your
+custom factory (C<custom_factory> attribute) class if this is the case.
 
 =cut
 has 'format' => (
@@ -155,7 +151,7 @@ that are an array will be converted to CSV values while the rest of the data
 types will be lost.
 
 In your tests if you want to use any of these parameters they will be available
-through the environment variables with a prefix of: I<TEST_SYSTEM_>.
+through the environment variables with a prefix of: C<TEST_SYSTEM_>.
 
 =cut
 has 'parameters' => (
@@ -174,7 +170,7 @@ has 'parameters' => (
 It will run a group of given test cases, however if no list is given or is
 empty then all the available cases will be run.
 
-The C<%options> is a hash of options that will be passed to the B<TAP::Harness>
+The C<%options> is a hash of options that will be passed to the I<TAP::Harness>
 object, some useful parameters are:
 
 =over 4
@@ -189,8 +185,8 @@ If you want the output (in console) to have color
 
 =item * formatter
 
-Although we use B<Test::System::Output::Factory> to offer a set of formatters
-you can provide your own formatter object.
+Although we use L<Test::System::Output::Factory> to offer a set of formatters
+you can provide your own formatter object. See C<available_formats>.
 
 =item * jobs
 
@@ -276,7 +272,7 @@ sub runtests {
     return 1;
 }
 
-=item B<prepare_environment ()>
+=item B<prepare_environment()>
 
 Prepares the environment by settings the needed environment values so they can
 be used later by the tests
@@ -306,7 +302,7 @@ sub prepare_environment {
 
 =item B<clean_environment ()>
 
-Cleans/deletes all the environment variables that match I<TEST_SYSTEM_*>
+Cleans/deletes all the environment variables that match C<TEST_SYSTEM_*>
 
 =cut
 sub clean_environment {
@@ -320,28 +316,28 @@ sub clean_environment {
     }
 }
 
-=item B<get_tests_from_test_plan ( $yaml_file,
+=item B<get_tests_from_test_plan($yaml_file,
         $do_not_fill_parameters, 
-        $do_not_fill_nodes ) >
+        $do_not_fill_nodes) >
 
-Reads the given tests yaml file (I<$yaml_file>). This YAML file should have at
+Reads the given tests yaml file (C<$yaml_file>). This YAML file should have at
 least a list of tests (in the form of a hash) and optionally can also have
 parameters the tests should contain.
 
 Although this method is used mostly internally there's the option to call it
-as any other method B<Test::System> offers.
+as any other method I<Test::System> offers.
 
-By default it will fill the parameters of your B<Test::System> instance but by
-passing I<$do_not_fill_parameters> (second parameter) as true or something
+By default it will fill the parameters of your I<Test::System> instance but by
+passing C<$do_not_fill_parameters> (second parameter) as true or something
 that Perl understands as true then it will skip the part. This should be
 presented as a hash in YAML syntax.
 
-The above appleis for I<$do_not_fill_nodes> (third parameter). This should be
+The above apply also to C<$do_not_fill_nodes> (third parameter). This should be
 presented as an array in YAML syntax.
 
-Once the file is read it will return an array of all the tests
+Once the file is read an array with all the tests will be returned.
 
-An example of a YAML test plan file can be found inside the I<examples>
+An example of a YAML test plan file can be found inside the C<examples>
 directory or:
 
     tests:
@@ -457,6 +453,19 @@ sub _generate_output_types_hash {
     }
     return \%hash;
 }
+
+=head1 AUTHOR
+ 
+Pablo Fischer (pablo@pablo.com.mx).
+
+=head1 COPYRIGHT
+ 
+Copyright (C) 2009 by Pablo Fischer.
+ 
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
 
 1;
 

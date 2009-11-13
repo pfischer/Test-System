@@ -1,9 +1,9 @@
 #
-# Test::System::Test
+# Test::System::Helper
 #
 # Author(s): Pablo Fischer (pfischer@cpan.org)
 # Created: 11/08/2009 14:03:24 PST 14:03:24
-package Test::System::Test;
+package Test::System::Helper;
 
 =head1 NAME
 
@@ -13,18 +13,7 @@ Test::System::Helper - Helper for the Test::System
 
 The purpose of this module is to provide the easiness of getting the list of
 nodes you want to test (if that is the case) and as well to let you fetch
-the value of the params you set via C<Test::System> for your tests.
-
-=head1 AUTHOR
- 
-Pablo Fischer, pablo@pablo.com.mx.
- 
-=head1 COPYRIGHT
- 
-Copyright (C) 2009 by Pablo Fischer
- 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+the value of the params you specified in your L<Test::System> instance.
 
 =cut
 
@@ -38,14 +27,16 @@ use Exporter qw(import);
 
 my @node_list;
 
+our $VERSION = '0.02';
+
 =head1 Functions
 
 =over 4
 
 =item B<get_nodes( )>
 
-Returns as an array the nodes you specified via B<Test::System>. It basically
-joins splits by CSV the I<TEST_SYSTEM_NODES> environment variable value and
+Returns as an array the nodes you specified via L<Test::System>. It basically
+joins splits by CSV the C<TEST_SYSTEM_NODES> environment variable value and
 returns it.
 
 =cut
@@ -66,12 +57,12 @@ sub get_nodes {
 
 Returns the parameter value of the given key.
 
-The key name is the same key passed to the B<Test::System>, not the environment
-variable that is set by B<Test::System>.
+The key name is the same key passed to the L<Test::System>, not the environment
+variable that is set by L<Test::System>.
 
-It returns the parameter by checking the for the environment variable that
-stores its value. The name of the environments variables can be explained in
-the B<Test::System> module, however a quick example will be:
+It returns the parameter by checking the environment variable that stores its
+value. The name of the environments variables can be explained in the
+L<Test::System> module, however a quick example will be:
 
     use Test::System::Helper;
 
@@ -81,7 +72,7 @@ the B<Test::System> module, however a quick example will be:
 
 Please note that since the values come from the environment the only type of
 data that will be returned will be scalar unless the key is not found then
-I<undef> will be returned.
+C<undef> will be returned.
 
 =back
 
@@ -98,5 +89,18 @@ sub get_param {
     return $ENV{$key};
 }
 
+=head1 AUTHOR
+ 
+Pablo Fischer, pablo@pablo.com.mx.
+ 
+
+=head1 COPYRIGHT
+ 
+Copyright (C) 2009 by Pablo Fischer
+ 
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
 1;
 

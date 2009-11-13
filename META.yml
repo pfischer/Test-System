@@ -1,5 +1,5 @@
 ---
-abstract: 'Test suite oriented for testing a *system*'
+abstract: 'Test suite oriented for testing system administration tasks'
 author:
   - 'Pablo Fischer (pablo@pablo.com.mx).'
 build_requires:
@@ -29,4 +29,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/pfischer/Test-System
-version: 0.02
+version: 0.03

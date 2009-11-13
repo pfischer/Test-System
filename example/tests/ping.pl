@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 use Test::More tests => 1;
-use Test::System::Test;
+use Test::System::Helper;
 use Data::Dumper;
 
 print Dumper(get_nodes());
