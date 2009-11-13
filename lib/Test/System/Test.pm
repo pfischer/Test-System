@@ -33,8 +33,6 @@ use warnings;
 use vars qw(@EXPORT @EXPORT_OK);
 use Exporter qw(import);
 
-our $VERSION = '0.01';
-
 @EXPORT_OK = qw(get_nodes get_param);
 @EXPORT = @EXPORT_OK;
 
