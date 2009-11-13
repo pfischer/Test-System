@@ -1,37 +1,158 @@
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Fri Nov 13 12:13:30 2009 -0800
+NAME
+    Test::System - Test suite oriented for testing system administration
+    tasks
 
-    Fixed some documentation issues and improved it.
+SYNOPSIS
+        use Test::System;
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Fri Nov 13 02:21:48 2009 -0800
+        my $suite = Test::System->new(
+                format => 'consoletable',
+                nodes => 'example.com',
+                test_groups => '~/code/my/system/tests.yaml'
+                );
+        $hung->runtests;
 
-    Increment version since I did something stupid via PAUSE
+DESCRIPTION
+    Loads and runs a set of tests for verifying a system administration task
+    before a possible incident or after a task that has been done.
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Fri Nov 13 02:19:12 2009 -0800
+    Tests can be run as perl scripts and actually in any format
+    *TAP::Harness* supports.
 
+Attributes
+    The module offers a list of attributes that some only have read only
+    access and others allow write access.
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Fri Nov 13 02:12:45 2009 -0800
+    test_groups
+          YAML filename of where a list of available tests are. This is not
+          required but can be useful if you want to group tests (like
+          *hardware.yaml*, *net.yaml*, etc). Comes also handy when user does
+          not provide a list of tests to execute, so all the tests listed in
+          this file are executed.
 
-    ./Makefile.PL result
+          An example of a YAML file:
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Fri Nov 13 02:07:02 2009 -0800
+              ping:
+                  description: Test the ping and do foo and make bar
+                  code: test/foo.pl
+              cpu:
+                  description: Test the CPU of nodes
+                  code: test/cpu.pl
 
-    Let Test::System read a test plan from a YAML file and execute from
-    there.
-    
-    Also drop some attributes from Test::System since they are not really
-    needed or some are not that *required*
+    available_tests
+          Is a read only attribute that contains a list of all available
+          tests found in the YAML file provided by "test_groups".
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Mon Nov 9 14:05:18 2009 -0800
+    nodes Is an attribute that can be represented as a string (like a
+          hostname) or as a list (where each item will be a node/hostname).
+          This attribute has write access and is where the tests are going
+          to be executed to.
 
-    Make it more CPAN standard
+          Another way of setting this value is when "runtests()" is called a
+          test plan (in the form of a YAML file) can be provided and it can
+          contain the list of nodes to use.
 
-Author: Pablo Fischer <pablo@pablo.com.mx>
-Date:   Mon Nov 9 09:53:02 2009 -0800
+    format
+          A write access string that has the format of how the tests should
+          be presented, please refer to the modules available under
+          Test::System::Output or in your custom factory ("custom_factory"
+          attribute) class if this is the case.
 
-    Initial revision
+    available_formats
+          A list of available formats, read only.
+
+    custom_factory
+          If you want to use your own Factory for creating your output you
+          can set this to your class name (NOT the object).
+
+    parameters
+          An attribute with write access permission. This attribute will
+          transform all the items of this hash to environment variables.
+
+          The use of this attribute is very handy if you want to provide
+          some additional data for your tests and since the tests are run in
+          separate forks with Test::Harness then the only possible way to
+          keep them is to make them available through the environment (%ENV
+          hash).
+
+          Please be warned that only scalars are stored in environment
+          variables, those that are an array will be converted to CSV values
+          while the rest of the data types will be lost.
+
+          In your tests if you want to use any of these parameters they will
+          be available through the environment variables with a prefix of:
+          "TEST_SYSTEM_".
+
+Methods
+    runtests( @tests , %options )
+        It will run a group of given test cases, however if no list is given
+        or is empty then all the available cases will be run.
+
+        The %options is a hash of options that will be passed to the
+        *TAP::Harness* object, some useful parameters are:
+
+        * verbosity
+            By default we mute everything with -9.
+
+        * color
+            If you want the output (in console) to have color
+
+        * formatter
+            Although we use Test::System::Output::Factory to offer a set of
+            formatters you can provide your own formatter object. See
+            "available_formats".
+
+        * jobs
+            If you have many tests you probably want to increment this value
+            (that defaults to 1) so other tests can be run at the same time.
+
+    prepare_environment()
+        Prepares the environment by settings the needed environment values
+        so they can be used later by the tests
+
+    clean_environment ()
+        Cleans/deletes all the environment variables that match
+        "TEST_SYSTEM_*"
+
+    get_tests_from_test_plan($yaml_file, $do_not_fill_parameters,
+    $do_not_fill_nodes)
+        Reads the given tests yaml file ($yaml_file). This YAML file should
+        have at least a list of tests (in the form of a hash) and optionally
+        can also have parameters the tests should contain.
+
+        Although this method is used mostly internally there's the option to
+        call it as any other method *Test::System* offers.
+
+        By default it will fill the parameters of your *Test::System*
+        instance but by passing $do_not_fill_parameters (second parameter)
+        as true or something that Perl understands as true then it will skip
+        the part. This should be presented as a hash in YAML syntax.
+
+        The above apply also to $do_not_fill_nodes (third parameter). This
+        should be presented as an array in YAML syntax.
+
+        Once the file is read an array with all the tests will be returned.
+
+        An example of a YAML test plan file can be found inside the
+        "examples" directory or:
+
+            tests:
+                - ping
+                - cpu
+                - memory
+            parameters:
+                foo: bar
+                bar: zoo
+            nodes:
+                - pablo.com.mx
+                - example.com
+
+AUTHOR
+    Pablo Fischer (pablo@pablo.com.mx).
+
+COPYRIGHT
+    Copyright (C) 2009 by Pablo Fischer.
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

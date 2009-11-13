@@ -1,4 +1,23 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 12:53:29 2009 -0800
+
+    Increment version (forgot a file)
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 12:13:30 2009 -0800
+
+    Fixed some documentation issues and improved it.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 02:21:48 2009 -0800
+
+    Increment version since I did something stupid via PAUSE
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 02:19:12 2009 -0800
+
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Fri Nov 13 02:12:45 2009 -0800
 
     ./Makefile.PL result
