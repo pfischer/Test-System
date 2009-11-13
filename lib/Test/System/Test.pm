@@ -7,59 +7,97 @@ package Test::System::Test;
 
 =head1 NAME
 
-Test::System::Test - Desired parent class for all Test::System tests
+Test::System::Helper - Helper for the Test::System
 
 =head1 DESCRIPTION
 
 The purpose of this module is to provide the easiness of getting the list of
-hostnames you want to test (if that is the case).
+nodes you want to test (if that is the case) and as well to let you fetch
+the value of the params you set via C<Test::System> for your tests.
+
+=head1 AUTHOR
+ 
+Pablo Fischer, pablo@pablo.com.mx.
+ 
+=head1 COPYRIGHT
+ 
+Copyright (C) 2009 by Pablo Fischer
+ 
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
 
-use Moose;
-use Test::Class;
-use Test::More;
-use base qw(Test::Class);
+use strict;
+use warnings;
+use vars qw(@EXPORT @EXPORT_OK);
+use Exporter qw(import);
 
-=head2 Attributes
+our $VERSION = '0.01';
 
-=over4
+@EXPORT_OK = qw(get_nodes get_param);
+@EXPORT = @EXPORT_OK;
 
-=item B<nodes>
+my @node_list;
 
-A list of all the nodes/hosts that will be tested.
+=head1 Functions
 
-=over4
+=over 4
+
+=item B<get_nodes( )>
+
+Returns as an array the nodes you specified via B<Test::System>. It basically
+joins splits by CSV the I<TEST_SYSTEM_NODES> environment variable value and
+returns it.
+
 =cut
-has 'nodes' => (
-        is => 'ro',
-        isa => => 'ArrayRef[Str]',
-        default => \&generate_node_list
-        );
-
-# Fills the nodes attribute by checking the TEST_SYSTEM_NODES environment
-# variable
-sub generate_node_list {
-    my $self = shift;
-    my @node_list;
-    if ($ENV{TEST_SYSTEM_NODES}) {
-        @node_list = split(',', $ENV{TEST_SYSTEM_NODES});
+sub get_nodes {
+    if (@node_list) {
+        return @node_list;
+    }
+    if ($ENV{'TEST_SYSTEM_NODES'}) {
+        @node_list = split(',', $ENV{'TEST_SYSTEM_NODES'});
     }
     # We don't like duplicated nodes..
     my %seen;
     my @unique = grep { ! $seen{$_}++ } @node_list;
-    $self->{nodes} = \@unique;
+    @node_list = \@unique;
 }
 
-######################### PRIVATE METHODS ############################
-# Makes sure that before we start we have the needed information before
-# starting the tests.
-sub __setup_tests : Test(setup) {
-    my $self = shift;
+=item B<get_param( $key )>
 
-    if (!$self->nodes) {
-        $self->SKIP_ALL("No nodes were given, nothing to test against");
+Returns the parameter value of the given key.
+
+The key name is the same key passed to the B<Test::System>, not the environment
+variable that is set by B<Test::System>.
+
+It returns the parameter by checking the for the environment variable that
+stores its value. The name of the environments variables can be explained in
+the B<Test::System> module, however a quick example will be:
+
+    use Test::System::Helper;
+
+    my $value = get_param('foo').
+
+    # It will returns the value of: TEST_SYSTEM_FOO
+
+Please note that since the values come from the environment the only type of
+data that will be returned will be scalar unless the key is not found then
+I<undef> will be returned.
+
+=back
+
+=cut
+sub get_param {
+    my ($key) = @_;
+
+    use Data::Dumper;
+    $key = 'TEST_SYSTEM_' . uc($key);
+
+    if (!defined $ENV{$key}) {
+        return undef;
     }
+    return $ENV{$key};
 }
 
 1;

@@ -1,0 +1,9 @@
+tests:
+    - ping
+    - cpu
+    - memory
+parameters:
+    ping_count: 10
+nodes:
+    - pablo.com.mx
+    - example.com

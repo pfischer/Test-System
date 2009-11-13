@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 # 
 # ping.pl
 # 
@@ -8,7 +8,10 @@
 use strict;
 use warnings;
 use Test::More tests => 1;
+use Test::System::Test;
+use Data::Dumper;
 
-
-ok('foo' eq 'foo', 'foome');
+print Dumper(get_nodes());
+print Dumper(get_param('ping_count'));
+is(1, 1, 'Test: 1');
 
