@@ -1,6 +1,6 @@
 tests:
     - ping
-    - cpu
+    - example/tests/cpu.pl
     - memory
 parameters:
     ping_count: 10

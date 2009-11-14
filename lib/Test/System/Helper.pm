@@ -50,7 +50,7 @@ sub get_nodes {
     # We don't like duplicated nodes..
     my %seen;
     my @unique = grep { ! $seen{$_}++ } @node_list;
-    @node_list = \@unique;
+    @node_list = @unique;
 }
 
 =item B<get_param( $key )>
