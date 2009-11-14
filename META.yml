@@ -21,12 +21,13 @@ requires:
   Class::Factory: 1.05
   File::Basename: 2.74
   Moose: 0.87
+  TAP::Formatter::Console: 3.17
+  TAP::Formatter::HTML: 0.08
   TAP::Harness: 3.17
-  Test::Class: 0.30
   Test::More: 0.94
   YAML::Syck: 1.07
   perl: 5.6.0
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/pfischer/Test-System
-version: 0.03
+version: 0.07
