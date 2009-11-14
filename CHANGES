@@ -1,4 +1,16 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 22:18:03 2009 -0800
+
+    Now Test::System can connect with callbacks of TAP::Parser and
+    TAP::Harness in order to know whats really happening and to build a hash
+    with all this information so user can later process.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 12:54:24 2009 -0800
+
+    Update the CHANGES file and the README
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Fri Nov 13 12:53:29 2009 -0800
 
     Increment version (forgot a file)
