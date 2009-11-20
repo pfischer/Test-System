@@ -63,9 +63,8 @@ use File::Basename qw(dirname);
 use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
-use UNIVERSAL qw(isa);
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 =head1 Attributes
 
@@ -275,9 +274,9 @@ to C<1>) so other tests can be run at the same time.
 sub runtests {
     my ($self, $tests, $options) = @_;
     my @tests_to_run;
-    if (isa(\$tests, 'ARRAY')) {
+    if (ref \$tests eq 'ARRAY') {
         @tests_to_run = $tests;
-    } elsif (isa(\$tests, 'SCALAR') and $tests =~ qr/\S+.yaml$/) {
+    } elsif (ref \$tests eq 'SCALAR' and $tests =~ qr/\S+.yaml$/) {
         @tests_to_run = $self->get_tests_from_test_plan($tests);
     }
 
@@ -286,9 +285,6 @@ sub runtests {
     }
 
     $self->pretests_verification();
-    if (!$self->nodes) {
-        die "No nodes were specified";
-    }
     # No duplicate tests and build the module name
     my (%seen, @test_files);
     foreach (@tests_to_run) {
@@ -488,9 +484,9 @@ sub prepare_environment {
                 my $value = $self->parameters->{$k};
                 $k = uc $k;
                 if (!defined $ENV{'TEST_SYSTEM_' . $k}) {
-                    if (isa(\$value, 'SCALAR')) {
+                    if (ref \$value eq 'SCALAR') {
                         $ENV{'TEST_SYSTEM_' . $k} = $value;
-                    } elsif (isa(\$value, 'ARRAY')) {
+                    } elsif (ref \$value eq 'ARRAY') {
                         $ENV{'TEST_SYSTEM_' . $k} = join(',', $value);
                     }
                 }
@@ -650,6 +646,10 @@ sub _generate_output_types_hash {
     }
     return \%hash;
 }
+
+=head1 SEE ALSO
+
+Take a look to an awesome and pretty similar CPAN module: L<Test::Server>.
 
 =head1 AUTHOR
  
