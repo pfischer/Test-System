@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 =head1 Attributes
 
@@ -473,7 +473,9 @@ sub prepare_environment {
     my ($self) = @_;
 
     # Nodes are stored under the TEST_SYSTEM_NODES environment key
-    $ENV{TEST_SYSTEM_NODES} = $self->nodes;
+    if ($self->nodes) {
+        $ENV{TEST_SYSTEM_NODES} = $self->nodes;
+    }
     if ($self->parameters) {
         if (ref($self->parameters) eq 'HASH') {
             foreach my $k (keys %{$self->parameters}) {
@@ -500,7 +502,7 @@ sub clean_environment {
     my ($self) = @_;
 
     my %environment_vars = %ENV;
-    foreach my $k (%environment_vars) {
+    foreach my $k (keys %environment_vars) {
         if ($k =~ /^TEST_SYSTEM_/) {
             delete $ENV{$k};
         }
