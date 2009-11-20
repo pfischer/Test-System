@@ -1,4 +1,14 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 20 00:55:48 2009 -0800
+
+    Fixed reference bugs
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Thu Nov 19 19:04:13 2009 -0800
+
+    New version of files before I create the tarball
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Thu Nov 19 19:00:55 2009 -0800
 
     A fiix, we shouldn't be depending on Universal::isa
