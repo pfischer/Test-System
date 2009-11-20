@@ -5,6 +5,7 @@ example/tests.yaml
 example/tests/10-stuff.t
 example/tests/cpu.pl
 example/tests/ping.pl
+fo
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -23,3 +24,4 @@ output.html
 pod2htmd.tmp
 pod2htmi.tmp
 README
+Test-System-0.08.tar.gz

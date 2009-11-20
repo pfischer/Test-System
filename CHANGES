@@ -1,4 +1,24 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Thu Nov 19 19:00:55 2009 -0800
+
+    A fiix, we shouldn't be depending on Universal::isa
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Wed Nov 18 11:13:46 2009 -0800
+
+    Documentation improvements and add a new function: pretest_verification
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 22:21:43 2009 -0800
+
+    Update METa.yml
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 13 22:20:00 2009 -0800
+
+    Update CHANGES, Makefile and README with latest stuff
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Fri Nov 13 22:18:03 2009 -0800
 
     Now Test::System can connect with callbacks of TAP::Parser and
