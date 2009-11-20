@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 =head1 Attributes
 
@@ -274,13 +274,15 @@ to C<1>) so other tests can be run at the same time.
 sub runtests {
     my ($self, $tests, $options) = @_;
     my @tests_to_run;
-    if (ref \$tests eq 'ARRAY') {
-        @tests_to_run = $tests;
-    } elsif (ref \$tests eq 'SCALAR' and $tests =~ qr/\S+.yaml$/) {
-        @tests_to_run = $self->get_tests_from_test_plan($tests);
+    if (defined $tests) {
+        if (ref($tests) eq 'ARRAY') {
+            @tests_to_run = @$tests;
+        } elsif (ref($tests) eq 'SCALAR' and $tests =~ qr/\S+.yaml$/) {
+            @tests_to_run = $self->get_tests_from_test_plan($tests);
+        }
     }
 
-    if (!@tests_to_run and $self->yaml_file) {
+    if (!@tests_to_run and $self->test_groups) {
         @tests_to_run = keys(%{$self->available_tests});
     }
 
@@ -324,14 +326,9 @@ sub runtests {
         $options->{'formatter_class'} = $formatter_class;
     }
     $options->{'merge'} = 0 unless defined $options->{'merge'};
-    my $verbosity = -9;
-    if (defined $options->{'verbosity'}) {
-        $verbosity = $options->{'verbosity'};
-        delete $options->{'verbosity'};
-    }
     my @lib = @INC;
-    if (defined $options->{'lib'} && ref $options->{'lib'} eq 'ARRAY') {
-        foreach (@$options->{'lib'}) {
+    if (defined $options->{'lib'} && ref($options->{'lib'}) eq 'ARRAY') {
+        foreach (@{$options->{'lib'}}) {
             push(@lib, $_);
         }
     }
@@ -342,7 +339,6 @@ sub runtests {
             sub { $self->set_results(shift) });
     $self->{harness}->callback('made_parser' =>
             sub { $self->setup_parser(shift); });
-    $self->{harness}->formatter->verbosity($verbosity);
     $self->{harness}->runtests(@test_files);
     $self->clean_environment();
     return 1;
@@ -479,7 +475,7 @@ sub prepare_environment {
     # Nodes are stored under the TEST_SYSTEM_NODES environment key
     $ENV{TEST_SYSTEM_NODES} = $self->nodes;
     if ($self->parameters) {
-        if (ref $self->parameters eq 'HASH') {
+        if (ref($self->parameters) eq 'HASH') {
             foreach my $k (keys %{$self->parameters}) {
                 my $value = $self->parameters->{$k};
                 $k = uc $k;

@@ -7,11 +7,13 @@
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More qw/no_plan/;
 use Test::System::Helper;
 use Data::Dumper;
 
-print Dumper(get_nodes());
-print Dumper(get_param('ping_count'));
-is(1, 1, 'Test: 1');
+
+my @nodes = get_nodes();
+foreach my $node (@nodes) {
+    is($node, 'pablo.com.mx', "Is pablo.com.mx");
+}
 
