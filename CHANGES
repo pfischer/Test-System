@@ -1,4 +1,25 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Sat Nov 21 19:11:26 2009 -0600
+
+     - Catch notes that come from the tests and place them on
+     $result->{'notes'}
+     - Result details are moved form $result->{'result'} to
+     $result->{'details'}
+     - The custom_factory attribute is now called format_factory_class
+     - Fix some bugs when we send a plan rather than an array of @tests.
+     - By default warnings are printed, they can be disabled by setting
+     Test::System->show_warnings to something Perl understand as false
+     (empty, 0, undef)
+     - For examples/suites.pl now it is a CLI command that uses
+     Getopt::Awesome (another of my *awesome* modules). This is not a
+     required dependency but instead it is a "recommended" dependency.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 20 11:36:44 2009 -0800
+
+    Extra CPAN file updates
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Fri Nov 20 11:35:09 2009 -0800
 
     Some other undef fixes
