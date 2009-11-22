@@ -17,6 +17,7 @@ define_option('test_groups=s', 'Test groups');
 define_option('node=s@', 'Test nodes');
 define_option('test_plan=s', 'Test plan');
 define_option('test=s@', 'Test, can be a name or a file');
+define_option('param=s%', 'Parameters we want to send');
 define_option('no-warnings', 'Show warnings?');
 
 my $suite = Test::System->new;
@@ -54,6 +55,11 @@ if (get_opt('format')) {
     $suite->format(get_opt('format'));
 }
 
+if (get_opt('param')) {
+    $suite->parameters(get_opt('param'));
+}
+
+print Dumper($suite);
 if ($plan) {
     $suite->runtests($plan);
 } else {
@@ -61,4 +67,4 @@ if ($plan) {
 }
 
 # Results?
-print Dumper($suite);
+#print Dumper($suite);

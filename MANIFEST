@@ -1,4 +1,3 @@
-1
 CHANGES
 example/execute_these_tests.yaml
 example/suite.pl
@@ -6,7 +5,6 @@ example/tests.yaml
 example/tests/10-stuff.t
 example/tests/cpu.pl
 example/tests/ping.pl
-fo
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -21,11 +19,4 @@ lib/Test/System/Output/Factory.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
-output.html
-pod2htmd.tmp
-pod2htmi.tmp
 README
-Test-System-0.08.tar.gz
-Test-System-0.09.tar.gz
-Test-System-0.10.tar.gz
-Test-System-0.11.tar.gz
