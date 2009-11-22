@@ -16,6 +16,9 @@ requires    'Test::More'        => '0.94';
 requires    'TAP::Formatter::HTML'    => '0.08';
 requires    'TAP::Formatter::Console' => '3.17';
 
+# Recos
+recommends  'Getopt::Awesome'   => '0.1.3';
+
 no_index directory => 'example';
 
 repository 'http://github.com/pfischer/Test-System';

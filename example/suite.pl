@@ -7,26 +7,58 @@
 
 use strict;
 use warnings;
+use Getopt::Awesome qw(:all);
 use Test::System;
 use Test::System::Output::Factory;
 use Data::Dumper;
 
-my $suite = Test::System->new(
-        nodes => ['example.com', 'pablo.com.mx'],
-        test_groups => 'example/tests.yaml');
 
-$suite->parameters(
-        {
-            'ping_count' => 5
-        });
-my $formatter = Test::System::Output::Factory->new('console',
-        {
-        verbosity => -3
-        });
-$suite->runtests(['ping', 'cpu'], {
-        verbosity => -2,
-        lib => ['foo']
-#formatter => $formatter,
-        });
+define_option('test_groups=s', 'Test groups');
+define_option('node=s@', 'Test nodes');
+define_option('test_plan=s', 'Test plan');
+define_option('test=s@', 'Test, can be a name or a file');
+define_option('no-warnings', 'Show warnings?');
 
+my $suite = Test::System->new;
 
+my @formats = keys(%{$suite->available_formats});
+define_option('format=s', 'A valid format (' . join(', ', @formats) . ')');
+parse_opts();
+
+$suite->show_warnings(!get_opt('no-warnings'));
+
+# Any nodes?
+if (get_opt('node')) {
+    $suite->nodes(get_opt('node'));
+}
+
+if (get_opt('test_groups')) {
+    $suite->test_groups(get_opt('test_groups'));
+}
+
+my @tests;
+if (get_opt('test')) {
+    @tests = get_opt('test');
+}
+
+my $plan;
+if (get_opt('test_plan')) {
+    if (@tests) {
+        warn "Hm, you provide a test_plan but also a test?!";
+    } else {
+        $plan = get_opt('test_plan');
+    }
+}
+
+if (get_opt('format')) {
+    $suite->format(get_opt('format'));
+}
+
+if ($plan) {
+    $suite->runtests($plan);
+} else {
+    $suite->runtests(@tests);
+}
+
+# Results?
+print Dumper($suite);

@@ -14,6 +14,11 @@ use Data::Dumper;
 
 my @nodes = get_nodes();
 foreach my $node (@nodes) {
-    is($node, 'pablo.com.mx', "Is pablo.com.mx");
+    my $result = ok($node eq 'pablo.com.mx', $node);
+    if (!$result) {
+        note("$node is not pablo.com.mx");
+    }
+#    is($node, 'pablo.com.mx', "Is pablo.com.mx");
 }
+note("everything is full of foobar");
 
