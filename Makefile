@@ -186,8 +186,7 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Test/.System.pm.swp \
-	lib/Test/System.pm \
+TO_INST_PM = lib/Test/System.pm \
 	lib/Test/System/Helper.pm \
 	lib/Test/System/Output/Factory.pm
 
@@ -195,8 +194,6 @@ PM_TO_BLIB = lib/Test/System/Helper.pm \
 	blib/lib/Test/System/Helper.pm \
 	lib/Test/System/Output/Factory.pm \
 	blib/lib/Test/System/Output/Factory.pm \
-	lib/Test/.System.pm.swp \
-	blib/lib/Test/.System.pm.swp \
 	lib/Test/System.pm \
 	blib/lib/Test/System.pm
 
@@ -804,7 +801,6 @@ pm_to_blib : $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
 	  lib/Test/System/Helper.pm blib/lib/Test/System/Helper.pm \
 	  lib/Test/System/Output/Factory.pm blib/lib/Test/System/Output/Factory.pm \
-	  lib/Test/.System.pm.swp blib/lib/Test/.System.pm.swp \
 	  lib/Test/System.pm blib/lib/Test/System.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
