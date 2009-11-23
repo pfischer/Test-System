@@ -153,6 +153,11 @@ Methods
         If you have many tests you probably want to increment this value
         (that defaults to 1) so other tests can be run at the same time.
 
+  run_test_plan($test_plan, %options)
+    It loads the given test plan file (should be written in YAML) in order
+    to get a list of tests to execute. Once it has a list of tests then it
+    calls "runtests" with this list and with the %options.
+
   setup_parser($parser)
     This method should never be called directly since this is triggered by
     TAP::Harness when every TAP::Parser object gets created.

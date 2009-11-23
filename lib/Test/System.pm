@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 =head1 Attributes
 
@@ -287,17 +287,19 @@ to C<1>) so other tests can be run at the same time.
 =cut
 sub runtests {
     my ($self, $tests, $options) = @_;
-    my @tests_to_run;
-    if (defined $tests) {
-        if (ref($tests) eq 'ARRAY') {
-            @tests_to_run = @$tests;
-        } elsif (ref($tests) eq 'SCALAR' and $tests =~ qr/\S+.yaml$/) {
-            @tests_to_run = $self->get_tests_from_test_plan($tests);
-        }
+   
+    if ($options and ref($options) ne 'HASH') {
+        confess "Options should be a hash reference";
     }
-
-    if (!@tests_to_run and $self->test_groups) {
+    if ($tests and ref($tests) ne 'ARRAY') {
+        confess "Tests are not an array (" . ref($tests) . ")";
+    }
+    
+    my @tests_to_run;
+    if (!$tests and $self->test_groups) {
         @tests_to_run = keys(%{$self->available_tests});
+    } else {
+        @tests_to_run = @$tests;
     }
 
     $self->pretests_verification();
@@ -366,6 +368,24 @@ sub runtests {
     $self->{harness}->runtests(@test_files);
     $self->clean_environment();
     return 1;
+}
+
+=head2 B<run_test_plan($test_plan, %options)>
+
+It loads the given test plan file (should be written in YAML) in order to get
+a list of tests to execute. Once it has a list of tests then it calls
+C<runtests> with this list and with the C<%options>.
+
+=cut
+sub run_test_plan {
+    my ($self, $test_plan, $options) = @_;
+
+    if (@_ gt 2 and ref($options) ne 'HASH') {
+        die "Options should be a hash reference";
+    }
+
+    my @tests_to_run = $self->get_tests_from_test_plan($test_plan);
+    return $self->runtests(\@tests_to_run, $options);
 }
 
 =head2 B<setup_parser($parser)>

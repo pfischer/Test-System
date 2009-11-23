@@ -59,11 +59,13 @@ if (get_opt('param')) {
     $suite->parameters(get_opt('param'));
 }
 
+my %options;
+$options{'merge'} = 'foo';
 print Dumper($suite);
 if ($plan) {
-    $suite->runtests($plan);
+    $suite->run_test_plan($plan, \%options);
 } else {
-    $suite->runtests(@tests);
+    $suite->runtests(@tests, \%options);
 }
 
 # Results?
