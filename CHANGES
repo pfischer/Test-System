@@ -1,4 +1,29 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 13:18:05 2009 -0600
+
+    Cleaner way: runtests for an array of test and run_test_plan for
+    running/loading a test plan (in yaml), then it will call runtests() with
+    the array of test to execute.
+    
+    Also now Test::System makes sure that %options is really a hash, if it
+    doesn't then it dies.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Sun Nov 22 13:51:09 2009 -0600
+
+    Updated CPAN files and examples too
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Sat Nov 21 19:16:42 2009 -0600
+
+    Files needed for building a new version
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Sat Nov 21 19:15:20 2009 -0600
+
+    New changes.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Sat Nov 21 19:11:26 2009 -0600
 
      - Catch notes that come from the tests and place them on
