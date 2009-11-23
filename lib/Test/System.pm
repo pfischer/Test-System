@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 =head1 Attributes
 
@@ -152,6 +152,12 @@ has 'available_formats' => (
 
 If you want to use your own Factory for creating your output you can set this
 to your class name (B<NOT the object>).
+
+Please note that L<Test::System> will continue to use
+L<Test::System::Output::Factory>, the reason of this is that any factory
+subclasses should add/register their classes via their parent class. So in this
+case all your new format classes should be added to L<Test::System::Output::Factory>.
+For more information please take a look to L<Class::Factory>.
 
 =cut
 has 'format_factory_class' => (
@@ -341,10 +347,10 @@ sub runtests {
             push(@test_files, [ $code, $description ]);
         }
     }
+    # Why not {format_factory_class}? because the registered types should be in the
+    # Test::System::Output::Factory:
+    # http://search.cpan.org/~phred/Class-Factory-1.06/lib/Class/Factory.pm#Gotchas
     my $factory_class = 'Test::System::Output::Factory';
-    if ($self->format_factory_class) {
-        $factory_class = $self->format_actory_class;
-    }
     my $formatter_class = "$factory_class"->get_registered_class(
             $self->format
             );
@@ -380,7 +386,7 @@ C<runtests> with this list and with the C<%options>.
 sub run_test_plan {
     my ($self, $test_plan, $options) = @_;
 
-    if (@_ gt 2 and ref($options) ne 'HASH') {
+    if ($options and ref($options) ne 'HASH') {
         die "Options should be a hash reference";
     }
 
@@ -678,7 +684,6 @@ sub _verify_format {
     if (!defined $self->available_formats->{$format}) {
         confess "The format you provided ($format) is not valid";
     }
-
     $self->{'format'} = $format;
 }
 
@@ -690,14 +695,15 @@ sub _fill_available_formats_hash {
     if (!$new_factory) {
         $new_factory = 'Test::System::Output::Factory';
     } else {
-        $self->{format_factory_class} = $new_factory;
+        $self->{'format_factory_class'} = $new_factory;
     }
-    my @registered_types = "$new_factory"->get_registered_types;
+    my @registered_types = "Test::System::Output::Factory"->get_registered_types;
 
     my %hash;
     foreach (@registered_types) {
         $hash{$_} = 1;
     }
+    $self->{'available_formats'} = \%hash;
     return \%hash;
 }
 

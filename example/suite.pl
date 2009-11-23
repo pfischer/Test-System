@@ -11,7 +11,7 @@ use Getopt::Awesome qw(:all);
 use Test::System;
 use Test::System::Output::Factory;
 use Data::Dumper;
-
+require "example/MyFactory.pm";
 
 define_option('test_groups=s', 'Test groups');
 define_option('node=s@', 'Test nodes');
@@ -21,6 +21,7 @@ define_option('param=s%', 'Parameters we want to send');
 define_option('no-warnings', 'Show warnings?');
 
 my $suite = Test::System->new;
+$suite->format_factory_class('MyFactory');
 
 my @formats = keys(%{$suite->available_formats});
 define_option('format=s', 'A valid format (' . join(', ', @formats) . ')');

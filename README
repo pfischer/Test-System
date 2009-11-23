@@ -85,6 +85,13 @@ Attributes
           If you want to use your own Factory for creating your output you
           can set this to your class name (NOT the object).
 
+          Please note that Test::System will continue to use
+          Test::System::Output::Factory, the reason of this is that any
+          factory subclasses should add/register their classes via their
+          parent class. So in this case all your new format classes should
+          be added to Test::System::Output::Factory. For more information
+          please take a look to Class::Factory.
+
     harness
           Is (or will be) the harness instance once "runtests" is executed.
 
