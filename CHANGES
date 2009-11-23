@@ -1,4 +1,16 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 15:47:59 2009 -0600
+
+    When a new format factory gets added we should still be calling
+    Test::system::Output::Factory cause this is where _all_ formats are.
+    Then user can override a format type by using Class::Factory.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 13:19:48 2009 -0600
+
+    New changes
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Mon Nov 23 13:18:05 2009 -0600
 
     Cleaner way: runtests for an array of test and run_test_plan for
