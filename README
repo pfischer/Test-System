@@ -218,8 +218,8 @@ Methods
         $do_not_fill_parameters, 
         $do_not_fill_nodes)
     Reads the given tests yaml file ($yaml_file). This YAML file should have
-    at least a list of tests (in the form of a hash) and optionally can also
-    have parameters the tests should contain.
+    at least a list of tests and optionally can also have parameters the
+    tests should contain.
 
     Although this method is used mostly internally there's the option to
     call it as any other method *Test::System* offers.
@@ -234,16 +234,29 @@ Methods
 
     Once the file is read an array with all the tests will be returned.
 
+    All the tests should be contained inside a hash named 'tests'. All the
+    tests should be represented in the form of a list, each item of the list
+    is the test you want to execute. At least it should have a 'code' item,
+    this is the filepath of the test (or the ID from a "test_groups").
+    Optionally you can also provide the description of the test (cause
+    otherwise the filename will be used and it can make ugly your summary
+    report).
+
     An example of a YAML test plan file can be found inside the "examples"
     directory or:
 
         tests:
-            - ping
-            - cpu
-            - memory
+            - 
+                code: ping
+                description: Checking the ping
+            - 
+                code: example/tests/cpu.pl
+                description: foobar
+            -
+                code: memory
+                description: Ehmm.. my name?
         parameters:
-            foo: bar
-            bar: zoo
+            ping_count: 10
         nodes:
             - pablo.com.mx
             - example.com

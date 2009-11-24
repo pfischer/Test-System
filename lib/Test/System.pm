@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 =head1 Attributes
 
@@ -298,9 +298,9 @@ sub runtests {
         confess "Options should be a hash reference";
     }
     if ($tests and ref($tests) ne 'ARRAY') {
-        confess "Tests are not an array (" . ref($tests) . ")";
+        confess "Tests parameter is not an array (" . ref($tests) . ")";
     }
-    
+   
     my @tests_to_run;
     if (!$tests and $self->test_groups) {
         @tests_to_run = keys(%{$self->available_tests});
@@ -311,23 +311,30 @@ sub runtests {
     $self->pretests_verification();
     # No duplicate tests and build the module name
     my (%seen, @test_files);
-    foreach (@tests_to_run) {
-        # Does the test exist?
-        my ($code, $description) = ($_, $_);
+    foreach my $test (@tests_to_run) {
+        my ($code, $description);
+        # What if the item is an array? of code, description?
+        if (ref($test) eq 'ARRAY') {
+            ($code, $description) = (
+                    $test->[0],
+                    $test->[1]);
+        } else {
+            ($code, $description) = ($test, $test);
+        }
         if (defined $self->available_tests) {
-            if (defined $self->available_tests->{$_}) {
-                if (defined $self->available_tests->{$_}->{'code'}) {
-                    $code = $self->available_tests->{$_}->{'code'};
+            if (defined $self->available_tests->{$test}) {
+                if (defined $self->available_tests->{$test}->{'code'}) {
+                    $code = $self->available_tests->{$test}->{'code'};
                 }
-                if (defined $self->available_tests->{$_}->{'description'}) {
-                    $description = $self->available_tests->{$_}->{'description'};
+                if (defined $self->available_tests->{$test}->{'description'}) {
+                    $description = $self->available_tests->{$test}->{'description'};
                 }
             } else {
                 warn "$_ is not listed in the available tests list, forcing it"
                     if $self->show_warnings;
             }
             if (!-f $code) {
-                if ($code eq $_) {
+                if ($code eq $test) {
                     warn "$code does not exist as a file, skipping"
                         if $self->show_warnings;
                 } else {
@@ -337,8 +344,8 @@ sub runtests {
                 next;
             }
         } else {
-            if (!-f $_) {
-                warn "$_ test does not exist as a file, skipping"
+            if (!-f $code) {
+                warn "$code test does not exist as a file, skipping"
                     if $self->show_warnings;
                 next;
             }
@@ -357,7 +364,7 @@ sub runtests {
     if (!defined $options->{'formatter_class'} && !defined $options->{'formatter'}) {
         $options->{'formatter_class'} = $formatter_class;
     }
-    $options->{'merge'} = 0 unless defined $options->{'merge'};
+    $options->{'merge'} = 1 unless defined $options->{'merge'};
     my @lib = @INC;
     if (defined $options->{'lib'} && ref($options->{'lib'}) eq 'ARRAY') {
         foreach (@{$options->{'lib'}}) {
@@ -575,8 +582,8 @@ sub clean_environment {
         $do_not_fill_nodes)>
 
 Reads the given tests yaml file (C<$yaml_file>). This YAML file should have at
-least a list of tests (in the form of a hash) and optionally can also have
-parameters the tests should contain.
+least a list of tests and optionally can also have parameters the tests
+should contain.
 
 Although this method is used mostly internally there's the option to call it
 as any other method I<Test::System> offers.
@@ -591,16 +598,28 @@ presented as an array in YAML syntax.
 
 Once the file is read an array with all the tests will be returned.
 
+All the tests should be contained inside a hash named 'tests'. All the tests
+should be represented in the form of a list, each item of the list is the
+test you want to execute. At least it should have a 'code' item, this is
+the filepath of the test (or the ID from a C<test_groups>). Optionally you
+can also provide the description of the test (cause otherwise the filename
+will be used and it can make ugly your summary report).
+
 An example of a YAML test plan file can be found inside the C<examples>
 directory or:
 
     tests:
-        - ping
-        - cpu
-        - memory
+        - 
+            code: ping
+            description: Checking the ping
+        - 
+            code: example/tests/cpu.pl
+            description: foobar
+        -
+            code: memory
+            description: Ehmm.. my name?
     parameters:
-        foo: bar
-        bar: zoo
+        ping_count: 10
     nodes:
         - pablo.com.mx
         - example.com
@@ -621,7 +640,20 @@ sub get_tests_from_test_plan {
             if $self->show_warnings;
         return;
     } else {
-        @tests = @{$data->{'tests'}};
+        foreach my $test (@{$data->{'tests'}}) {
+            if (!defined $test->{'code'}) {
+                confess "Sorry but you need to provide the 'code' ID or " .
+                    "filepath where your test is ($yaml_file)";
+            }
+            if (defined $test->{'description'}) {
+                push(@tests, [
+                        $test->{'code'},
+                        $test->{'description'}
+                        ]);
+            } else {
+                push(@tests, $test->{'code'});
+            }
+        }
     }
     if (!$do_not_fill_parameters) {
         if ($data->{'parameters'}) {

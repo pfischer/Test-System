@@ -1,4 +1,15 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 19:47:23 2009 -0600
+
+    To the details of each test we now have a new key: is_ok to know if the
+    test failed or passed.
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 15:49:15 2009 -0600
+
+    New changes
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Mon Nov 23 15:47:59 2009 -0600
 
     When a new format factory gets added we should still be calling

@@ -40,7 +40,15 @@ if (get_opt('test_groups')) {
 
 my @tests;
 if (get_opt('test')) {
-    @tests = get_opt('test');
+    # An array ref!
+    my $tmp_tests = get_opt('test');
+    foreach (@$tmp_tests) {
+        if (m/(.+?)#(.+?)$/) {
+            push(@tests, [$1, $2]);
+        } else {
+            push(@tests, $_);
+        }
+    }
 }
 
 my $plan;
@@ -66,7 +74,7 @@ print Dumper($suite);
 if ($plan) {
     $suite->run_test_plan($plan, \%options);
 } else {
-    $suite->runtests(@tests, \%options);
+    $suite->runtests(\@tests, \%options);
 }
 
 # Results?
