@@ -1,6 +1,7 @@
 1
 CHANGES
 example/execute_these_tests.yaml
+example/MyFactory.pm
 example/suite.pl
 example/tests.yaml
 example/tests/10-stuff.t
@@ -22,3 +23,4 @@ MANIFEST			This list of files
 META.yml
 README
 Test-System-0.12.tar.gz
+Test-System-0.14.tar.gz
