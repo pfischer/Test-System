@@ -1,4 +1,15 @@
 Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Fri Nov 27 16:38:46 2009 -0600
+
+    details of each test now will have the same hash elements of
+    TAP::Result::Test plus a new one: is_ok (now a hash, not a subroutine)
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
+Date:   Mon Nov 23 22:24:51 2009 -0600
+
+    New changes
+
+Author: Pablo Fischer <pablo@pablo.com.mx>
 Date:   Mon Nov 23 22:23:06 2009 -0600
 
     Now each test can be represented as a scalar (the name/filepath) or as
