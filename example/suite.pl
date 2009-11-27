@@ -70,12 +70,12 @@ if (get_opt('param')) {
 
 my %options;
 $options{'merge'} = 'foo';
-print Dumper($suite);
 if ($plan) {
     $suite->run_test_plan($plan, \%options);
 } else {
     $suite->runtests(\@tests, \%options);
 }
+
 
 # Results?
 #print Dumper($suite);

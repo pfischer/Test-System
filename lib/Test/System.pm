@@ -64,7 +64,7 @@ use YAML::Syck;
 use Test::System::Output::Factory;
 use TAP::Harness;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 Attributes
 
@@ -466,12 +466,13 @@ sub what_happened {
     }
 
     if ($result_test->{'type'} eq 'test') {
-        push(@{$parser->{'test_system_details'}}, {
-                num         => $result_test->{'test_num'},
-                description => $result_test->{'description'},
-                raw         => $result_test->{'raw'},
-                is_ok       => $result_test->is_ok
-                });
+        my $description = $result_test->{'description'};
+        if (my $directive = $result_test->{'directive'}) {
+            $description = $result_test->{'explanation'};
+        }
+        my %value = map { $_ => $result_test->{$_} } keys(%$result_test);
+        $value{'is_ok'} = $result_test->is_ok;
+        push(@{$parser->{'test_system_details'}}, \%value);
     } elsif ($result_test->{'type'} eq 'comment') { # for notes()
         push(@{$parser->{'test_system_notes'}}, {
                 comment  => $result_test->{'comment'},
